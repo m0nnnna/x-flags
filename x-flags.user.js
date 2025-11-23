@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         X Flags
+// @name         X Country Codes — Bugfixed Username (v3.6)
 // @namespace    https://github.com/m0nnnna/x-flags
-// @version      3.4
-// @description  Shows country code (US, NG, IN...) on timeline + profiles + replies
-// @author       Noc
+// @version      3.6
+// @description  Country coodes on your timeline
+// @author       m0nnnna
 // @match        https://x.com/*
 // @match        https://twitter.com/*
 // @grant        GM_xmlhttpRequest
@@ -11,6 +11,8 @@
 // @grant        GM_getValue
 // @grant        GM_registerMenuCommand
 // @connect      raw.githubusercontent.com
+// @downloadURL  https://github.com/m0nnnna/x-flags/raw/refs/heads/main/x-flags.user.js
+// @updateURL    https://github.com/m0nnnna/x-flags/raw/refs/heads/main/x-flags.user.js
 // @run-at       document-idle
 // ==/UserScript==
 
@@ -23,7 +25,8 @@
     let globalDB = {};
     let localDB = await GM_getValue(STORAGE_KEY, {});
 
-const countryToCode = {
+    // 70+ countries (unchanged)
+    const countryToCode = {
         "United States": "US", "Canada": "CA", "United Kingdom": "GB", "Germany": "DE",
         "France": "FR", "India": "IN", "Japan": "JP", "Australia": "AU", "Brazil": "BR",
         "Russia": "RU", "Mexico": "MX", "China": "CN", "Italy": "IT", "Spain": "ES",
@@ -51,30 +54,58 @@ const countryToCode = {
         });
     }
 
-    // CAPTURE (unchanged — still 100% working)
+    // FIXED CAPTURE: URL-first username + better span scan
     if (location.pathname.endsWith('/about')) {
         setTimeout(() => {
+            console.log('X Flags: Scanning /about...');
+
+            // Primary: Extract from URL (e.g., /9msmsg/about → "9msmsg")
+            let username = location.pathname.split('/')[1]?.toLowerCase() || '';
+            console.log(`X Flags: URL username: ${username || 'not found'}`);
+
+            // Fallback: Scan spans for exact @handle (skip labels)
+            if (!username) {
+                const spans = document.querySelectorAll('span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3');
+                for (const s of spans) {
+                    const txt = s.textContent.trim();
+                    if (txt.startsWith('@') && txt.length > 1 && !txt.includes('says')) { // Skip "x.com says @user"
+                        username = txt.slice(1).toLowerCase();
+                        console.log(`X Flags: Span username fallback: @${username}`);
+                        break;
+                    }
+                }
+            }
+
+            let countryName = '';
             const spans = document.querySelectorAll('span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3');
-            let username = '', countryName = '';
             for (const s of spans) {
                 const txt = s.textContent.trim();
-                if (txt.startsWith('@')) username = txt.slice(1).toLowerCase();
-                else if (countryToCode[txt]) countryName = txt;
+                if (!txt.startsWith('@') && countryToCode[txt]) {
+                    countryName = txt;
+                    console.log(`X Flags: Found country: ${countryName}`);
+                    break;
+                }
             }
+
             if (username && countryName) {
                 const code = countryToCode[countryName];
                 if (!localDB[username] && !globalDB[username]) {
                     localDB[username] = code;
                     GM_setValue(STORAGE_KEY, localDB);
-                    alert(`CAPTURED @${username} → ${code}`);
+                    console.log(`X Flags: ✅ Captured @${username} → ${countryName} (${code})`);
+                    alert(`✅ CAPTURED @${username} → ${code}`);
+                } else {
+                    console.log(`X Flags: @${username} already in DB (${localDB[username] || globalDB[username]})`);
                 }
+            } else {
+                console.log('X Flags: ❌ Missing username/country (check console for details)');
             }
         }, 2000);
     }
 
-    // DISPLAY EVERYWHERE — profile header + every post
+    // DISPLAY EVERYWHERE (unchanged)
     function applyEverywhere() {
-        // 1. Profile header (when viewing someone's profile)
+        // Profile header
         const profileHeader = document.querySelector('[data-testid="UserName"]');
         if (profileHeader) {
             const username = location.pathname.split('/')[1]?.toLowerCase();
@@ -90,7 +121,7 @@ const countryToCode = {
             }
         }
 
-        // 2. Every post/tweet/reply on page
+        // Every post/tweet/reply
         document.querySelectorAll('article').forEach(article => {
             if (article.querySelector('.simplecode')) return;
 
@@ -114,7 +145,7 @@ const countryToCode = {
         });
     }
 
-    // EXPORT (still 100% working)
+    // EXPORT (unchanged)
     function exportDB() {
         const json = JSON.stringify(localDB, null, 2);
         const t = document.createElement('textarea');
@@ -124,12 +155,11 @@ const countryToCode = {
     }
     GM_registerMenuCommand(`Export Local DB (${Object.keys(localDB).length} entries)`, exportDB);
 
-    // Run everywhere
     const observer = new MutationObserver(applyEverywhere);
     observer.observe(document.body, { childList: true, subtree: true });
     loadGlobal();
     setInterval(loadGlobal, 300000);
     setTimeout(applyEverywhere, 3000);
 
-    console.log('X Country Codes v3.4 — Shows on profiles + timeline + replies');
+    console.log('X Country Codes v3.6 — Username bug fixed (URL fallback)');
 })();
