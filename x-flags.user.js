@@ -53,6 +53,7 @@
         "Oceania": "OC",
 		"West Asia": "WA",
 		"East Asia & Pacific": "EA"
+		"South Asia": "SA"
     };
 
     function loadGlobal() {
