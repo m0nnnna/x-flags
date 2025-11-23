@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Country Codes — Bugfixed Username (v3.6)
 // @namespace    https://github.com/m0nnnna/x-flags
-// @version      4.0
+// @version      4.1
 // @description  Country coodes on your timeline
 // @author       m0nnnna
 // @match        https://x.com/*
@@ -178,5 +178,5 @@
     setInterval(loadGlobal, 300000);
     setTimeout(applyEverywhere, 3000);
 
-    console.log('X Country + Region Codes v4.1 — Export + Clear Local DB ready');
+    console.log('X Country + Region Codes');
 })();
