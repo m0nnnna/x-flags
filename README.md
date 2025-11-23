@@ -10,4 +10,4 @@ Grab it [here](https://violentmonkey.github.io/get-it/).
 Once you are ready install the script by clicking [here](https://github.com/m0nnnna/x-flags/raw/refs/heads/main/x-flags.user.js).
 
 The script will load the json tied to this repo. It should auto update as well. 
-To caputre new people's location go to their profile with the script installed, go to the location area and make sure you refresh the page. After it refreshes on their about it will prompt you saying it's been captured. Once you build up some names you can export the json file from violentmonkey and submit a pull request here to add to the main database.
+To caputre new people's location go to their profile with the script installed, click the users join date on their profile and it will load the about page. Once this loads refresh your browser window. After it refreshes on their about it will prompt you saying it's been captured. Once you build up some names you can export the json file from violentmonkey and submit a pull request here to add to the main database.
