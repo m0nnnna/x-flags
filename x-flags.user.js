@@ -49,7 +49,8 @@
         "Europe": "EU",
         "Africa": "AF",
         "Asia": "AS",
-        "Oceania": "OC"
+        "Oceania": "OC",
+		"West Asia": "WA"
     };
 
     function loadGlobal() {
@@ -154,7 +155,22 @@
         catch (e) { prompt(`Copy failed — paste this JSON:`, json); }
         document.body.removeChild(t);
     }
+
+    function clearLocalDB() {
+        if (Object.keys(localDB).length === 0) {
+            alert("Local DB is already empty!");
+            return;
+        }
+        if (confirm(`Delete all ${Object.keys(localDB).length} captured entries?\nThis cannot be undone.`)) {
+            localDB = {};
+            GM_setValue(STORAGE_KEY, localDB);
+            alert("Local DB cleared! Refresh to see changes.");
+            location.reload(); // Optional: auto-refresh
+        }
+    }
+
     GM_registerMenuCommand(`Export Local DB (${Object.keys(localDB).length} entries)`, exportDB);
+    GM_registerMenuCommand(`Clear Local DB (${Object.keys(localDB).length} entries)`, clearLocalDB);
 
     const observer = new MutationObserver(applyEverywhere);
     observer.observe(document.body, { childList: true, subtree: true });
@@ -162,5 +178,5 @@
     setInterval(loadGlobal, 300000);
     setTimeout(applyEverywhere, 3000);
 
-    console.log('X Country + Region Codes v4.0 — Blue countries, red regions, reposts fixed');
+    console.log('X Country + Region Codes v4.1 — Export + Clear Local DB ready');
 })();

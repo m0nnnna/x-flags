@@ -15,23 +15,29 @@ To caputre new people's location go to their profile with the script installed, 
 
 # Twitter Users by Country
 
-**Total users analyzed:** 76
+**Total users analyzed:** 102
 
 | Rank | Country Code | Users | Percentage |
 |------|--------------|-------|------------|
-| 1    | US           | 53    |  69.74% |
-| 2    | CA           | 5     |   6.58% |
-| 3    | GB           | 4     |   5.26% |
-| 4    | NA           | 4     |   5.26% |
-| 5    | RO           | 2     |   2.63% |
-| 6    | AR           | 1     |   1.32% |
-| 7    | AT           | 1     |   1.32% |
-| 8    | AU           | 1     |   1.32% |
-| 9    | BR           | 1     |   1.32% |
-| 10   | EU           | 1     |   1.32% |
-| 11   | IN           | 1     |   1.32% |
-| 12   | IT           | 1     |   1.32% |
-| 13   | NO           | 1     |   1.32% |
+| 1    | US           | 67    |  65.69% |
+| 2    | NA           | 6     |   5.88% |
+| 3    | CA           | 5     |   4.90% |
+| 4    | GB           | 5     |   4.90% |
+| 5    | AU           | 2     |   1.96% |
+| 6    | DE           | 2     |   1.96% |
+| 7    | IN           | 2     |   1.96% |
+| 8    | RO           | 2     |   1.96% |
+| 9    | AR           | 1     |   0.98% |
+| 10   | AT           | 1     |   0.98% |
+| 11   | BD           | 1     |   0.98% |
+| 12   | BR           | 1     |   0.98% |
+| 13   | EU           | 1     |   0.98% |
+| 14   | ID           | 1     |   0.98% |
+| 15   | IT           | 1     |   0.98% |
+| 16   | NO           | 1     |   0.98% |
+| 17   | NZ           | 1     |   0.98% |
+| 18   | RS           | 1     |   0.98% |
+| 19   | TR           | 1     |   0.98% |
 
 
 # Countries
