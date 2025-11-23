@@ -40,7 +40,7 @@
         "Israel": "IL", "Saudi Arabia": "SA", "United Arab Emirates": "AE", "Qatar": "QA",
         "Iraq": "IQ", "Iran": "IR", "South Korea": "KR", "Taiwan": "TW", "Malaysia": "MY",
         "Singapore": "SG", "Kazakhstan": "KZ", "Uzbekistan": "UZ", "Serbia": "RS", "Croatia": "HR",
-		"Lithuania": "LT", "Burkina Faso": "BF"
+		"Lithuania": "LT", "Burkina Faso": "BF", "Ecuador": "EC"
     };
 
     // REGIONS → red
@@ -51,7 +51,8 @@
         "Africa": "AF",
         "Asia": "AS",
         "Oceania": "OC",
-		"West Asia": "WA"
+		"West Asia": "WA",
+		"East Asia & Pacific": "EA"
     };
 
     function loadGlobal() {
