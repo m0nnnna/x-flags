@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         X Country Codes — Bugfixed Username (v3.6)
+// @name         X Country Codes
 // @namespace    https://github.com/m0nnnna/x-flags
 // @version      4.1
 // @description  Country coodes on your timeline
@@ -39,7 +39,8 @@
         "Hungary": "HU", "Austria": "AT", "Switzerland": "CH", "Ireland": "IE", "New Zealand": "NZ",
         "Israel": "IL", "Saudi Arabia": "SA", "United Arab Emirates": "AE", "Qatar": "QA",
         "Iraq": "IQ", "Iran": "IR", "South Korea": "KR", "Taiwan": "TW", "Malaysia": "MY",
-        "Singapore": "SG", "Kazakhstan": "KZ", "Uzbekistan": "UZ", "Serbia": "RS", "Croatia": "HR"
+        "Singapore": "SG", "Kazakhstan": "KZ", "Uzbekistan": "UZ", "Serbia": "RS", "Croatia": "HR",
+		"Lithuania": "LT", "Burkina Faso": "BF"
     };
 
     // REGIONS → red
