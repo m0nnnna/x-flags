@@ -23,12 +23,24 @@
     let globalDB = {};
     let localDB = await GM_getValue(STORAGE_KEY, {});
 
-    const countryToCode = {
+const countryToCode = {
         "United States": "US", "Canada": "CA", "United Kingdom": "GB", "Germany": "DE",
         "France": "FR", "India": "IN", "Japan": "JP", "Australia": "AU", "Brazil": "BR",
         "Russia": "RU", "Mexico": "MX", "China": "CN", "Italy": "IT", "Spain": "ES",
         "Nigeria": "NG", "Kenya": "KE", "Pakistan": "PK", "Philippines": "PH", "Indonesia": "ID",
-        "Turkey": "TR", "Egypt": "EG", "South Africa": "ZA", "Vietnam": "VN", "Thailand": "TH"
+        "Turkey": "TR", "Egypt": "EG", "South Africa": "ZA", "Vietnam": "VN", "Thailand": "TH",
+        "Bangladesh": "BD", "Ghana": "GH", "Algeria": "DZ", "Morocco": "MA", "Ethiopia": "ET",
+        "Argentina": "AR", "Colombia": "CO", "Peru": "PE", "Venezuela": "VE", "Chile": "CL",
+        "Ecuador": "EC", "Bolivia": "BO", "Ukraine": "UA", "Netherlands": "NL", "Belgium": "BE",
+        "Sweden": "SE", "Norway": "NO", "Denmark": "DK", "Finland": "FI", "Poland": "PL",
+        "Romania": "RO", "Greece": "GR", "Portugal": "PT", "Czech Republic": "CZ", "Hungary": "HU",
+        "Austria": "AT", "Switzerland": "CH", "Ireland": "IE", "New Zealand": "NZ", "Israel": "IL",
+        "Palestine": "PS", "Saudi Arabia": "SA", "United Arab Emirates": "AE", "Qatar": "QA",
+        "Kuwait": "KW", "Iraq": "IQ", "Iran": "IR", "Afghanistan": "AF", "Myanmar": "MM",
+        "Sri Lanka": "LK", "Nepal": "NP", "Malaysia": "MY", "Singapore": "SG", "South Korea": "KR",
+        "North Korea": "KP", "Taiwan": "TW", "Hong Kong": "HK", "Mongolia": "MN", "Kazakhstan": "KZ",
+        "Uzbekistan": "UZ", "Cambodia": "KH", "Laos": "LA", "Serbia": "RS", "Croatia": "HR",
+        "Bosnia and Herzegovina": "BA", "Albania": "AL", "North Macedonia": "MK", "Bulgaria": "BG"
     };
 
     function loadGlobal() {
