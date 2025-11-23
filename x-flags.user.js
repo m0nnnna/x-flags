@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         X Country Codes — Bugfixed Username (v3.6)
 // @namespace    https://github.com/m0nnnna/x-flags
-// @version      3.6
+// @version      3.9
 // @description  Country coodes on your timeline
 // @author       m0nnnna
 // @match        https://x.com/*
@@ -25,7 +25,7 @@
     let globalDB = {};
     let localDB = await GM_getValue(STORAGE_KEY, {});
 
-    // 70+ countries (unchanged)
+    // Your full 70+ countryToCode (same as before)
     const countryToCode = {
         "United States": "US", "Canada": "CA", "United Kingdom": "GB", "Germany": "DE",
         "France": "FR", "India": "IN", "Japan": "JP", "Australia": "AU", "Brazil": "BR",
@@ -54,21 +54,18 @@
         });
     }
 
-    // FIXED CAPTURE: URL-first username + better span scan
+    // CAPTURE — unchanged
     if (location.pathname.endsWith('/about')) {
         setTimeout(() => {
             console.log('X Flags: Scanning /about...');
-
-            // Primary: Extract from URL (e.g., /9msmsg/about → "9msmsg")
             let username = location.pathname.split('/')[1]?.toLowerCase() || '';
             console.log(`X Flags: URL username: ${username || 'not found'}`);
 
-            // Fallback: Scan spans for exact @handle (skip labels)
             if (!username) {
                 const spans = document.querySelectorAll('span.css-1jxf684.r-bcqeeo.r-1ttztb7.r-qvutc0.r-poiln3');
                 for (const s of spans) {
                     const txt = s.textContent.trim();
-                    if (txt.startsWith('@') && txt.length > 1 && !txt.includes('says')) { // Skip "x.com says @user"
+                    if (txt.startsWith('@') && txt.length > 1 && !txt.includes('says')) {
                         username = txt.slice(1).toLowerCase();
                         console.log(`X Flags: Span username fallback: @${username}`);
                         break;
@@ -95,63 +92,74 @@
                     console.log(`X Flags: ✅ Captured @${username} → ${countryName} (${code})`);
                     alert(`✅ CAPTURED @${username} → ${code}`);
                 } else {
-                    console.log(`X Flags: @${username} already in DB (${localDB[username] || globalDB[username]})`);
+                    console.log(`X Flags: @${username} already in DB`);
                 }
             } else {
-                console.log('X Flags: ❌ Missing username/country (check console for details)');
+                console.log('X Flags: ❌ Missing username/country');
             }
         }, 2000);
     }
 
-    // DISPLAY EVERYWHERE (unchanged)
+    // FIXED DISPLAY — reposts/quotes: original author only, innermost link
     function applyEverywhere() {
-        // Profile header
+        // Profile header (unchanged)
         const profileHeader = document.querySelector('[data-testid="UserName"]');
-        if (profileHeader) {
+        if (profileHeader && !profileHeader.querySelector('.profilecode')) {
             const username = location.pathname.split('/')[1]?.toLowerCase();
-            if (username && !profileHeader.querySelector('.profilecode')) {
-                const code = globalDB[username] || localDB[username];
-                if (code) {
-                    const badge = document.createElement('span');
-                    badge.textContent = ` ${code} `;
-                    badge.className = 'profilecode';
-                    badge.style.cssText = 'background:#1d9bf0;color:white;padding:3px 8px;border-radius:6px;font-size:0.8em;font-weight:bold;margin-left:8px;vertical-align:middle;';
-                    profileHeader.appendChild(badge);
-                }
+            const code = globalDB[username] || localDB[username];
+            if (code) {
+                const badge = document.createElement('span');
+                badge.textContent = ` ${code} `;
+                badge.className = 'profilecode';
+                badge.style.cssText = 'background:#1d9bf0;color:white;padding:3px 8px;border-radius:6px;font-size:0.8em;font-weight:bold;margin-left:8px;';
+                profileHeader.appendChild(badge);
             }
         }
 
-        // Every post/tweet/reply
+        // Every post — REPOST/QUOTE FIXED: innermost original author
         document.querySelectorAll('article').forEach(article => {
             if (article.querySelector('.simplecode')) return;
 
-            const link = article.querySelector('a[href^="/"][role="link"], a[href^="/"][tabindex="0"]');
-            if (!link) return;
-
-            const username = link.getAttribute('href')?.slice(1).split('/')[0]?.toLowerCase();
-            if (!username) return;
-
-            const code = globalDB[username] || localDB[username];
-            if (code) {
-                const span = document.createElement('span');
-                span.textContent = ` ${code} `;
-                span.className = 'simplecode';
-                span.style.cssText = 'background:#1d9bf0;color:white;padding:2px 6px;border-radius:4px;font-size:0.75em;font-weight:bold;margin-left:6px;vertical-align:middle;';
-                span.title = `@${username} → ${code}`;
-
-                const target = article.querySelector('[data-testid="User-Name"], [data-testid="UserAvatarContainer"] ~ div span');
-                if (target) target.appendChild(span);
+            // Drill down to innermost tweet for reposts/quotes
+            let targetArticle = article;
+            while (targetArticle.querySelector('[data-testid="tweet"]')) {
+                targetArticle = targetArticle.querySelector('[data-testid="tweet"]');
             }
+
+            // Original author link (innermost User-Name)
+            const originalAuthorLink = targetArticle.querySelector('[data-testid="User-Name"] a[href^="/"]');
+            if (!originalAuthorLink) return;
+
+            const username = originalAuthorLink.getAttribute('href').slice(1).split('/')[0].toLowerCase();
+            const code = globalDB[username] || localDB[username];
+            if (!code) return;
+
+            const span = document.createElement('span');
+            span.textContent = ` ${code} `;
+            span.className = 'simplecode';
+            span.style.cssText = 'background:#1d9bf0;color:white;padding:2px 6px;border-radius:4px;font-size:0.75em;font-weight:bold;margin-left:6px;vertical-align:middle;';
+            span.title = `@${username} → ${code} (original)`;
+
+            const target = targetArticle.querySelector('[data-testid="User-Name"]');
+            if (target) target.appendChild(span);
         });
     }
 
-    // EXPORT (unchanged)
+    // EXPORT — prompt fallback for flakes
     function exportDB() {
         const json = JSON.stringify(localDB, null, 2);
         const t = document.createElement('textarea');
-        t.value = json; document.body.appendChild(t); t.select();
-        document.execCommand('copy'); document.body.removeChild(t);
-        alert(`Copied ${Object.keys(localDB).length} entries!\nPaste into PR → https://github.com/m0nnnna/x-flags`);
+        t.value = json;
+        document.body.appendChild(t);
+        t.select();
+        try {
+            document.execCommand('copy');
+            document.body.removeChild(t);
+            alert(`✅ Copied ${Object.keys(localDB).length} entries!\nPaste into PR → https://github.com/m0nnnna/x-flags`);
+        } catch (e) {
+            document.body.removeChild(t);
+            prompt(`Copy failed—paste this JSON into your PR:\n\n${json}`);
+        }
     }
     GM_registerMenuCommand(`Export Local DB (${Object.keys(localDB).length} entries)`, exportDB);
 
@@ -161,5 +169,5 @@
     setInterval(loadGlobal, 300000);
     setTimeout(applyEverywhere, 3000);
 
-    console.log('X Country Codes v3.6 — Username bug fixed (URL fallback)');
+    console.log('X Country Codes v3.9');
 })();
