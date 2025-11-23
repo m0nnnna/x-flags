@@ -52,7 +52,7 @@
         "Asia": "AS",
         "Oceania": "OC",
 		"West Asia": "WA",
-		"East Asia & Pacific": "EA"
+		"East Asia & Pacific": "EA",
 		"South Asia": "SA"
     };
 
